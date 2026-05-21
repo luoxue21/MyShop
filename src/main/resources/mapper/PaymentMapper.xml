@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdust.shopping.mapper.PaymentMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.edu.sdust.shopping.entity.Payment">
+        <id column="payment_id" property="paymentId"/>
+        <result column="order_id" property="orderId"/>
+        <result column="payment_no" property="paymentNo"/>
+        <result column="payment_method" property="paymentMethod"/>
+        <result column="payment_amount" property="paymentAmount"/>
+        <result column="payment_status" property="paymentStatus"/>
+        <result column="payment_time" property="paymentTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        payment_id, order_id, payment_no, payment_method, payment_amount, payment_status, payment_time, create_time
+    </sql>
+    
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payment
+        WHERE payment_id = #{paymentId}
+    </select>
+    
+    <select id="findByOrderId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payment
+        WHERE order_id = #{orderId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM payment
+    </select>
+    
+    <insert id="insert" parameterType="cn.edu.sdust.shopping.entity.Payment" useGeneratedKeys="true" keyProperty="paymentId">
+        INSERT INTO payment (order_id, payment_no, payment_method, payment_amount, payment_status, payment_time)
+        VALUES (#{orderId}, #{paymentNo}, #{paymentMethod}, #{paymentAmount}, #{paymentStatus}, #{paymentTime})
+    </insert>
+    
+    <update id="update" parameterType="cn.edu.sdust.shopping.entity.Payment">
+        UPDATE payment
+        <set>
+            <if test="paymentStatus != null">payment_status = #{paymentStatus},</if>
+            <if test="paymentTime != null">payment_time = #{paymentTime},</if>
+        </set>
+        WHERE payment_id = #{paymentId}
+    </update>
+    
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdust.shopping.mapper.CartItemMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.edu.sdust.shopping.entity.CartItem">
+        <id column="item_id" property="itemId"/>
+        <result column="cart_id" property="cartId"/>
+        <result column="product_id" property="productId"/>
+        <result column="quantity" property="quantity"/>
+        <result column="checked" property="checked"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_image" property="productImage"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="product_status" property="productStatus"/>
+    </resultMap>
+    
+    <!-- 根据购物车ID查询所有购物车项（包含商品信息） -->
+    <select id="findByCartId" resultMap="BaseResultMap">
+        SELECT 
+            ci.*,
+            p.product_name,
+            p.image_url as product_image,
+            p.price,
+            p.stock,
+            p.status as product_status
+        FROM cart_item ci
+        LEFT JOIN product p ON ci.product_id = p.product_id
+        WHERE ci.cart_id = #{cartId}
+        ORDER BY ci.create_time DESC
+    </select>
+    
+    <!-- 根据购物车ID和商品ID查询购物车项 -->
+    <select id="findByCartIdAndProductId" resultMap="BaseResultMap">
+        SELECT * FROM cart_item 
+        WHERE cart_id = #{cartId} AND product_id = #{productId}
+    </select>
+    
+    <!-- 根据购物车项ID查询 -->
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT * FROM cart_item WHERE item_id = #{itemId}
+    </select>
+    
+    <!-- 插入购物车项 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="itemId">
+        INSERT INTO cart_item (cart_id, product_id, quantity, checked)
+        VALUES (#{cartId}, #{productId}, #{quantity}, #{checked})
+    </insert>
+    
+    <!-- 更新购物车项数量 -->
+    <update id="updateQuantity">
+        UPDATE cart_item SET quantity = #{quantity} WHERE item_id = #{itemId}
+    </update>
+    
+    <!-- 更新购物车项选中状态 -->
+    <update id="updateChecked">
+        UPDATE cart_item SET checked = #{checked} WHERE item_id = #{itemId}
+    </update>
+    
+    <!-- 删除购物车项 -->
+    <delete id="deleteById">
+        DELETE FROM cart_item WHERE item_id = #{itemId}
+    </delete>
+    
+    <!-- 根据购物车ID删除所有购物车项 -->
+    <delete id="deleteByCartId">
+        DELETE FROM cart_item WHERE cart_id = #{cartId}
+    </delete>
+    
+    <!-- 统计购物车项数量 -->
+    <select id="countByCartId" resultType="int">
+        SELECT COUNT(*) FROM cart_item WHERE cart_id = #{cartId}
+    </select>
+    
+</mapper>

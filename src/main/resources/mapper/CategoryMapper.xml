@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdust.shopping.mapper.CategoryMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.edu.sdust.shopping.entity.Category">
+        <id column="category_id" property="categoryId"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="sort_order" property="sortOrder"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        category_id, category_name, parent_id, sort_order, status, create_time
+    </sql>
+    
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM category
+        WHERE category_id = #{categoryId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM category
+        ORDER BY sort_order ASC
+    </select>
+    
+    <select id="findEnabledCategories" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM category
+        WHERE status = 1
+        ORDER BY sort_order ASC
+    </select>
+    
+    <insert id="insert" parameterType="cn.edu.sdust.shopping.entity.Category" useGeneratedKeys="true" keyProperty="categoryId">
+        INSERT INTO category (category_name, parent_id, sort_order, status)
+        VALUES (#{categoryName}, #{parentId}, #{sortOrder}, #{status})
+    </insert>
+    
+    <update id="update" parameterType="cn.edu.sdust.shopping.entity.Category">
+        UPDATE category
+        <set>
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE category_id = #{categoryId}
+    </update>
+    
+    <delete id="deleteById">
+        DELETE FROM category WHERE category_id = #{categoryId}
+    </delete>
+    
+</mapper>

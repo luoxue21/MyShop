@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdust.shopping.mapper.ProductMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.edu.sdust.shopping.entity.Product">
+        <id column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="merchant_id" property="merchantId"/>
+        <result column="price" property="price"/>
+        <result column="original_price" property="originalPrice"/>
+        <result column="stock" property="stock"/>
+        <result column="sales" property="sales"/>
+        <result column="description" property="description"/>
+        <result column="image_url" property="imageUrl"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="merchant_name" property="merchantName"/>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+        p.product_id, p.product_name, p.category_id, p.merchant_id, p.price, p.original_price, 
+        p.stock, p.sales, p.description, p.image_url, p.status, p.create_time, p.update_time,
+        c.category_name, m.merchant_name
+    </sql>
+    
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN merchant m ON p.merchant_id = m.merchant_id
+        WHERE p.product_id = #{productId}
+    </select>
+    
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN merchant m ON p.merchant_id = m.merchant_id
+    </select>
+    
+    <select id="findByCategoryId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN merchant m ON p.merchant_id = m.merchant_id
+        WHERE p.category_id = #{categoryId}
+    </select>
+    
+    <select id="searchByName" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN merchant m ON p.merchant_id = m.merchant_id
+        WHERE p.product_name LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    
+    <select id="findOnSaleProducts" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM product p
+        LEFT JOIN category c ON p.category_id = c.category_id
+        LEFT JOIN merchant m ON p.merchant_id = m.merchant_id
+        WHERE p.status = 1
+    </select>
+    
+    <insert id="insert" parameterType="cn.edu.sdust.shopping.entity.Product" useGeneratedKeys="true" keyProperty="productId">
+        INSERT INTO product (product_name, category_id, merchant_id, price, original_price, stock, sales, description, image_url, status)
+        VALUES (#{productName}, #{categoryId}, #{merchantId}, #{price}, #{originalPrice}, #{stock}, #{sales}, #{description}, #{imageUrl}, #{status})
+    </insert>
+    
+    <update id="update" parameterType="cn.edu.sdust.shopping.entity.Product">
+        UPDATE product
+        <set>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="merchantId != null">merchant_id = #{merchantId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="originalPrice != null">original_price = #{originalPrice},</if>
+            <if test="stock != null">stock = #{stock},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE product_id = #{productId}
+    </update>
+    
+    <delete id="deleteById">
+        DELETE FROM product WHERE product_id = #{productId}
+    </delete>
+    
+    <update id="updateStock">
+        UPDATE product SET stock = #{stock} WHERE product_id = #{productId}
+    </update>
+    
+</mapper>

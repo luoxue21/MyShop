@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商系统首页</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            opacity: 0.8;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-logout {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* 搜索区域 */
+        .search-section {
+            background: white;
+            padding: 30px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .search-box button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        /* 分类区域 */
+        .category-section {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .category-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .category-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .category-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* 商品列表 */
+        .product-section {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 250px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+        
+        .no-image {
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .product-info {
+            padding: 15px;
+        }
+        
+        .product-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .product-price {
+            color: #f44336;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .product-original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+        
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">MyShop</div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="products.html">商品列表</a></li>
+                <li><a href="cart.html">购物车</a></li>
+                <li><a href="orders.html">我的订单</a></li>
+                <li><a href="profile.html">个人中心</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="username"></span>
+                <button class="btn-logout" onclick="logout()">退出</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- 搜索区域 -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchKeyword" placeholder="搜索商品...">
+                <button onclick="searchProducts()">搜索</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 分类区域 -->
+    <section class="category-section">
+        <h2 class="section-title">商品分类</h2>
+        <div class="category-list" id="categoryList">
+            <!-- 动态加载分类 -->
+        </div>
+    </section>
+    
+    <!-- 热门商品 -->
+    <section class="product-section">
+        <h2 class="section-title">热门商品</h2>
+        <div class="product-grid" id="productList">
+            <!-- 动态加载商品 -->
+        </div>
+    </section>
+    
+    <script>
+        // 检查登录状态
+        const currentUser = localStorage.getItem('currentUser');
+        if (!currentUser) {
+            window.location.href = 'login.html';
+        } else {
+            const user = JSON.parse(currentUser);
+            document.getElementById('username').textContent = user.username;
+        }
+        
+        // 加载分类
+        function loadCategories() {
+            fetch('http://localhost:8081/api/category/enabled')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        const categoryList = document.getElementById('categoryList');
+                        categoryList.innerHTML = data.data.map(cat => `
+                            <div class="category-item" onclick="filterByCategory(${cat.categoryId})">
+                                <div>${cat.categoryName}</div>
+                            </div>
+                        `).join('');
+                    }
+                });
+        }
+        
+        // 加载商品
+        function loadProducts() {
+            fetch('http://localhost:8081/api/product/onsale')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        renderProducts(data.data);
+                    }
+                });
+        }
+        
+        // 渲染商品列表
+        function renderProducts(products) {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = products.map(product => `
+                <div class="product-card" onclick="viewProductDetail(${product.productId})">
+                    <div class="product-image">
+                        ${product.imageUrl ? `<img src="${product.imageUrl}" alt="${product.productName}" onerror="this.parentElement.innerHTML='<div class=\'no-image\'>暂无图片</div>'">` : '<div class="no-image">暂无图片</div>'}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${product.productName}</div>
+                        <div class="product-price">¥${product.price}</div>
+                        ${product.originalPrice ? `<div class="product-original-price">¥${product.originalPrice}</div>` : ''}
+                        <div class="product-meta">
+                            <span>库存: ${product.stock}</span>
+                            <span>销量: ${product.sales}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // 搜索商品
+        function searchProducts() {
+            const keyword = document.getElementById('searchKeyword').value.trim();
+            if (!keyword) {
+                loadProducts();
+                return;
+            }
+            
+            fetch(`http://localhost:8081/api/product/search?keyword=${encodeURIComponent(keyword)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        renderProducts(data.data);
+                    }
+                });
+        }
+        
+        // 按分类筛选
+        function filterByCategory(categoryId) {
+            fetch(`http://localhost:8081/api/product/category/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        renderProducts(data.data);
+                    }
+                });
+        }
+        
+        // 查看商品详情
+        function viewProductDetail(productId) {
+            window.location.href = `product-detail.html?id=${productId}`;
+        }
+        
+        // 退出登录
+        function logout() {
+            fetch('http://localhost:8081/api/user/logout', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            .then(() => {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            });
+        }
+        
+        // 页面加载时初始化
+        window.onload = function() {
+            loadCategories();
+            loadProducts();
+        };
+    </script>
+</body>
+</html>
